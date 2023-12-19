@@ -43,4 +43,18 @@ groupsRouter.get('/create-groups', async (req, res) => {
     }
 });
 
+groupsRouter.get('/', async (req,res)=>{
+    try {
+        let groups = await AppDataSource.getRepository(groupes).find({
+            relations: {
+                countriesList: true
+            }
+        })
+        
+        res.send(groups)
+    } catch (e) {
+        res.sendStatus(500)
+    }
+});
+
 export { groupsRouter }
