@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { groupes } from "./groupes";
 
-@Entity()
+@Entity({synchronize: false})
 export class countries {
     @PrimaryGeneratedColumn()
     id: number;

@@ -6,6 +6,8 @@ import * as cors from 'cors'
 import {AppDataSource} from "./database/datasource";
 import { countriesRouter } from './route/countries';
 import { groupsRouter } from './route/groups';
+import { simulateRouter } from './route/simulate';
+import { competitionsRouter } from './route/competitions';
 
 class Index {
     static app = express()
@@ -19,6 +21,8 @@ class Index {
     static routeConfig(){
         Index.app.use('/countries', countriesRouter)
         Index.app.use('/groups', groupsRouter)
+        Index.app.use('/simulate', simulateRouter)
+        Index.app.use('/competitions', competitionsRouter)
 
     }
 

@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { countries } from "./coutries";
+import { competitions } from "./competitions";
 
 @Entity()
 export class groupes {
@@ -11,4 +12,7 @@ export class groupes {
 
     @OneToMany(() => countries, (c) => c.group)
     countriesList: countries[]
+
+    @ManyToOne(() => competitions, (c) => c.groupesList)
+    competition: competitions
 }
