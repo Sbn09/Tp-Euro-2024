@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>TP euro 2024</title>
+    <!-- Ajout du lien CDN de Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <table id="countries" class="table table-striped">
+          <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th>Couleur primaire</th>
+                <th>Couleur secondaire</th>
+                <th>Classement FIFA</th>
+                <th>Code</th>
+                <th>Chapeau</th>
+                <th>PlayOff</th>
+                <th>Images</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+      </table>
+    <div id="groups"></div>
+  </body>
+<script>
+async function afficherCountries() {
+    const reponse = await fetch("http://localhost:5000/countries");
+    const countries = await reponse.json();
+    
+  var countriesTable =  document.getElementById('countries');
+  countries.forEach(country => {
+    let row = countriesTable.insertRow(-1);
+    row.insertCell(0).innerHTML = country.name;
+    row.insertCell(1).innerHTML = country.primary_color;
+    row.insertCell(2).innerHTML = country.secondary_color;
+    row.insertCell(3).innerHTML = country.fifa_rank;
+    row.insertCell(4).innerHTML = country.code;
+    row.insertCell(5).innerHTML = country.hat;
+    row.insertCell(6).innerHTML = country.playoff;
+    let imagesrow = row.insertCell(7);
+    let image = document.createElement("img");
+    image.src = "assets/images/flags/1x1/" + country.code + ".svg";
+    imagesrow.appendChild(image);
+  });
+  }
+  
+afficherCountries()
+ </script>
+</html>

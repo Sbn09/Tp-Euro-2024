@@ -5,6 +5,7 @@ export interface TeamScore {
     wins: number;
     goals: number;
     info: countries;
+    match: matches
 }
 
 export function getWinners(matchs:matches[]) {
@@ -14,9 +15,9 @@ export function getWinners(matchs:matches[]) {
         // Initialiser les scores si nécessaire
 
         if(match.result === 'win') {
-            winners.push({ wins: 1, goals: match.homeTeamGoals , info: match.homeTeam })
+            winners.push({ wins: 1, goals: match.homeTeamGoals , info: match.homeTeam, match })
         } else {
-            winners.push({ wins: 1, goals: match.awayTeamGoals , info: match.homeTeam })
+            winners.push({ wins: 1, goals: match.awayTeamGoals , info: match.homeTeam, match })
         }
     }
 
