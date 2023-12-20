@@ -16,7 +16,9 @@ function getRandomInt(min, max) {
 
 groupsRouter.get('/create-groups/:compet', async (req, res) => {
     try  {
-        let competion = await AppDataSource.getRepository(competitions).findOneByOrFail({name:req.params.compet})
+        let competion = await AppDataSource.getRepository(competitions).findOneByOrFail({id:parseInt(req.params.compet)})
+
+        await AppDataSource.getRepository(groupes).delete({competition:competion})
 
         let countriesList = await AppDataSource.getRepository(countries).find();
 
@@ -63,7 +65,7 @@ groupsRouter.get('/create-groups/:compet', async (req, res) => {
 
 groupsRouter.get('/:compet', async (req,res)=>{
     try {
-        let competion = await AppDataSource.getRepository(competitions).findOneByOrFail({name:req.params.compet})
+        let competion = await AppDataSource.getRepository(competitions).findOneByOrFail({id:parseInt(req.params.compet)})
 
         let groups = await AppDataSource.getRepository(groupes).find({
             relations: {

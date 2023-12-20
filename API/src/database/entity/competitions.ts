@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { groupes } from "./groupes";
 import { matches } from "./matches";
 
-@Entity({synchronize: false})
+@Entity({synchronize: true})
 export class competitions {
     @PrimaryGeneratedColumn()
     id: number;
