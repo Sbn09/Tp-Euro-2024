@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { countries } from "./coutries";
 import { competitions } from "./competitions";
 
@@ -10,7 +10,8 @@ export class groupes {
     @Column()
     groupName: string;
 
-    @OneToMany(() => countries, (c) => c.group)
+    @ManyToMany(()=> countries)
+    @JoinTable()
     countriesList: countries[]
 
     @ManyToOne(() => competitions, (c) => c.groupesList)

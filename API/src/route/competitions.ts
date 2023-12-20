@@ -13,7 +13,29 @@ competitionsRouter.get('/', async (req, res) => {
     }
 });
 
-competitionsRouter.get('/create/:nom', async (req, res) => {
+competitionsRouter.get('/:id/with-matches/:level?', async (req, res) => {
+    try  {
+        res.send(await AppDataSource.getRepository(competitions).find({
+            where:{
+                id: parseInt(req.params.id),
+                matchesList: {
+                    level: req.params.level ? parseInt(req.params.level) : undefined
+                }
+            },
+            relations:{
+                matchesList: {
+                    awayTeam: true,
+                    homeTeam: true
+                }
+            }
+        }))
+    } catch (e) {
+        res.sendStatus(500)
+        console.log(e)
+    }
+});
+
+competitionsRouter.post('/create/:nom', async (req, res) => {
     try  {
         let competion = new competitions()
         competion.name = req.params.nom;

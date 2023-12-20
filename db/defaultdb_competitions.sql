@@ -21,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '3480bdaa-9e59-11ee-9075-7e5231e2a079:1-1206';
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '3480bdaa-9e59-11ee-9075-7e5231e2a079:1-1587';
 
 --
 -- Table structure for table `competitions`
@@ -34,7 +34,7 @@ CREATE TABLE `competitions` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,7 @@ CREATE TABLE `competitions` (
 
 LOCK TABLES `competitions` WRITE;
 /*!40000 ALTER TABLE `competitions` DISABLE KEYS */;
-INSERT INTO `competitions` VALUES (1,'UEFA2'),(2,'UEFA2'),(3,'UEFA2');
+INSERT INTO `competitions` VALUES (12,'UEFAVION'),(13,'FIFA 2024'),(15,'THEO WORLD CUP');
 /*!40000 ALTER TABLE `competitions` ENABLE KEYS */;
 UNLOCK TABLES;
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
@@ -57,4 +57,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-20  9:58:46
+-- Dump completed on 2023-12-20 14:46:12

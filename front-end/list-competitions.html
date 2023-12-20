@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Compétitions</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="my-3">Gestion des compétitions</h1>
+      <button class="btn btn-primary my-3" onclick="location.reload()">Recharger les compétitions</button>
+      <input type="text" id="nomCompetition" class="form-control my-3" placeholder="Nom de la compétition">
+      <button class="btn btn-success" onclick="creerCompetition()">Créer une compétition</button>
+      <table id="competitions" class="table table-striped mt-3">
+          <thead class="thead-dark">
+            <tr>
+                <th>Nom</th>
+                <th>Id</th>
+                <th colspan=2>Actions</th>
+                <!-- Ajoutez d'autres colonnes si nécessaire -->
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+      </table>
+    </div>
+    <script>
+    async function chargerCompetitions() {
+        const reponse = await fetch("http://localhost:5000/competitions");
+        const competitions = await reponse.json();
+        let table = document.getElementById('competitions');
+        
+        // Ajouter les nouvelles données
+        competitions.forEach(competition => {
+            let row = table.insertRow(-1);
+            row.insertCell(0).innerHTML = competition.name;
+            row.insertCell(1).innerHTML = competition.id;
+            // Ajoutez d'autres cellules si nécessaire
+
+
+			// Créer le bouton pour voir les groupes de la compétition
+			let voirGroupesBtn = document.createElement('button');
+			voirGroupesBtn.innerHTML = 'Voir les groupes de la compétition';
+			voirGroupesBtn.onclick = function() {
+				window.location.href = `list-competitions-groups.html?id=${competition.id}`;
+			};
+			let cell2 = row.insertCell(2);
+			cell2.appendChild(voirGroupesBtn);
+			
+			// Créer le bouton pour voir les matches de la compétition
+			let voirMatchesBtn = document.createElement('button');
+			voirMatchesBtn.innerHTML = 'Voir les matches de la compétition';
+			voirMatchesBtn.onclick = function() {
+				window.location.href = `list-competitions-matches.html?id=${competition.id}&level=99`;
+			};
+			let cell3 = row.insertCell(3);
+			cell3.appendChild(voirMatchesBtn);
+        });
+    }
+	chargerCompetitions()
+
+    async function creerCompetition() {
+        let nom = document.getElementById('nomCompetition').value;
+        await fetch(`http://localhost:5000/competitions/create/${nom}`, { method: 'POST' });
+        // Recharger la liste des compétitions
+        location.reload();
+    }
+    </script>
+  </body>
+</html>

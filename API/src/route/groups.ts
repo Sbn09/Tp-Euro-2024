@@ -14,7 +14,7 @@ function getRandomInt(min, max) {
   }
 
 
-groupsRouter.get('/create-groups/:compet', async (req, res) => {
+groupsRouter.post('/create-groups/:compet', async (req, res) => {
     try  {
         let competion = await AppDataSource.getRepository(competitions).findOneByOrFail({id:parseInt(req.params.compet)})
 

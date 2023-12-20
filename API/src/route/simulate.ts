@@ -4,20 +4,15 @@ import { groupes } from '../database/entity/groupes';
 import { matches } from '../database/entity/matches';
 import { competitions } from '../database/entity/competitions';
 import { ErrorHandler } from '../utils/error/error-handler';
-import { countries } from '../database/entity/coutries';
 import { simulateRound } from '../utils/simulateRouds';
 import { getWinners } from '../utils/getWinners';
+import { getWinnersOfQualif } from '../utils/getWinnersOfQualif';
 
-interface TeamScore {
-    wins: number;
-    goals: number;
-    info: countries;
-}
 
 const simulateRouter = express.Router();
 
 
-simulateRouter.get('/generate/:compet/:level', async (req, res) => {
+simulateRouter.post('/generate/:compet/:level', async (req, res) => {
     try {
         let competition = await AppDataSource.getRepository(competitions).findOneByOrFail({id:parseInt(req.params.compet)})
 
@@ -65,6 +60,9 @@ simulateRouter.get('/generate/:compet/:level', async (req, res) => {
             let groups = await AppDataSource.getRepository(groupes).find({
                 relations: {
                     countriesList: true
+                },
+                where: {
+                    competition: competition
                 }
             });
             if(!groups) {
@@ -104,59 +102,19 @@ simulateRouter.get('/generate/:compet/:level', async (req, res) => {
                 }
             
             }
+            return res.send(getWinnersOfQualif(matchs))
+
+            
         } else if(level[selectedLevelIndex] === 16) { // 
             // Dans le cas ou on est en 16 ème de finale la situation est assez spéciale car nous devons 
             // effectuer des calcules plus ou moins précis pour connaitre qui est qualifié
-
-            let teamScores = {} as TeamScore;
-
-            // Parcourir chaque match pour calculer les scores
-            for (let match of previousMatches as matches[]) {
-                let homeTeam = match.homeTeam.id;
-                let awayTeam = match.awayTeam.id;
-
-                // Initialiser les scores si nécessaire
-                if (!teamScores[homeTeam]) {
-                    teamScores[homeTeam] = { wins: 0, goals: 0 , info: match.homeTeam };
-                }
-                if (!teamScores[awayTeam]) {
-                    teamScores[awayTeam] = { wins: 0, goals: 0, info: match.awayTeam };
-                }
-
-                // Mettre à jour les scores en fonction des résultats du match
-                if (match.result === 'win') {
-                    teamScores[homeTeam].wins++;
-                    teamScores[homeTeam].goals += match.homeTeamGoals;
-                    teamScores[awayTeam].goals += match.awayTeamGoals;
-                } else if (match.result === 'loss') {
-                    teamScores[awayTeam].wins++;
-                    teamScores[homeTeam].goals += match.homeTeamGoals;
-                    teamScores[awayTeam].goals += match.awayTeamGoals;
-                } else { // match nul
-                    teamScores[homeTeam].goals += match.homeTeamGoals;
-                    teamScores[awayTeam].goals += match.awayTeamGoals;
-                }
-            }
-
-            // Trier les équipes par nombre de victoires et de buts pour déterminer les équipes qualifiées
-            let qualifiedTeams = Object.values(teamScores).sort((a:TeamScore, b:TeamScore) => {
-                if (a.wins > b.wins) {
-                    return -1;
-                } else if (a.wins < b.wins) {
-                    return 1;
-                } else { // Si le nombre de victoires est le même, utiliser la différence de buts
-                    return b.goals - a.goals;
-                }
-            }).slice(0, 16); 
-
-            
-            return res.send(await simulateRound(qualifiedTeams.map((teams=> teams.info)), competition, level[selectedLevelIndex]))
+           
+            return res.send(getWinners(await simulateRound(getWinnersOfQualif(previousMatches).map((teams=> teams.info)), competition, level[selectedLevelIndex])))
         } else {
             let winners = getWinners(previousMatches)
-            return res.send(await simulateRound(winners.map((teams=> teams.info)), competition, level[selectedLevelIndex]))
+            return res.send(getWinners(await simulateRound(winners.map((teams=> teams.info)), competition, level[selectedLevelIndex])))
         }
 
-        return res.send(matchs)
     } catch (e) {
         return ErrorHandler(e,req,res)
     }
@@ -189,50 +147,8 @@ simulateRouter.get('/view-result/:compet/:level', async (req, res) => {
         if(level[selectedLevelIndex] === 99) { // 
             // Dans le cas ou on est en 16 ème de finale la situation est assez spéciale car nous devons 
             // effectuer des calcules plus ou moins précis pour connaitre qui est qualifié
-
-            let teamScores = {} as TeamScore;
-
-            // Parcourir chaque match pour calculer les scores
-            for (let match of previousMatches) {
-                let homeTeam = match.homeTeam.id;
-                let awayTeam = match.awayTeam.id;
-
-                // Initialiser les scores si nécessaire
-                if (!teamScores[homeTeam]) {
-                    teamScores[homeTeam] = { wins: 0, goals: 0 , info: match.homeTeam };
-                }
-                if (!teamScores[awayTeam]) {
-                    teamScores[awayTeam] = { wins: 0, goals: 0, info: match.awayTeam };
-                }
-
-                // Mettre à jour les scores en fonction des résultats du match
-                if (match.result === 'win') {
-                    teamScores[homeTeam].wins++;
-                    teamScores[homeTeam].goals += match.homeTeamGoals;
-                    teamScores[awayTeam].goals += match.awayTeamGoals;
-                } else if (match.result === 'loss') {
-                    teamScores[awayTeam].wins++;
-                    teamScores[homeTeam].goals += match.homeTeamGoals;
-                    teamScores[awayTeam].goals += match.awayTeamGoals;
-                } else { // match nul
-                    teamScores[homeTeam].goals += match.homeTeamGoals;
-                    teamScores[awayTeam].goals += match.awayTeamGoals;
-                }
-            }
-
-            // Trier les équipes par nombre de victoires et de buts pour déterminer les équipes qualifiées
-            let qualifiedTeams = Object.values(teamScores).sort((a:TeamScore, b:TeamScore) => {
-                if (a.wins > b.wins) {
-                    return -1;
-                } else if (a.wins < b.wins) {
-                    return 1;
-                } else { // Si le nombre de victoires est le même, utiliser la différence de buts
-                    return b.goals - a.goals;
-                }
-            }).slice(0, 16); 
-
             
-            return res.send(qualifiedTeams)
+            return res.send(getWinners(previousMatches))
 
         } else {
             return res.send(getWinners(previousMatches))
@@ -273,6 +189,8 @@ simulateRouter.get('/view-matches/:compet/:level', async (req, res) => {
         return ErrorHandler(e,req,res)
     }
 });
+
+
 
 
 
