@@ -9,7 +9,7 @@ import { groupsRouter } from './route/groups';
 import { simulateRouter } from './route/simulate';
 import { competitionsRouter } from './route/competitions';
 
-class Index {
+export class Index {
     static app = express()
     static router = express.Router()
 
@@ -23,21 +23,27 @@ class Index {
         Index.app.use('/groups', groupsRouter)
         Index.app.use('/simulate', simulateRouter)
         Index.app.use('/competitions', competitionsRouter)
+        Index.app.get('/', (req,res)=>{
+            res.send('Travail de Tess & Rémi')
+        })
 
     }
 
-    static serverConfig(){
-        AppDataSource.initialize().then(async () => {
+    static async serverConfig(){
+        await AppDataSource.initialize().then(async () => {
             console.log("Connecté a la base de données")
-            Index.app.listen(config.PORT, ()=> console.log(`API démarrée sur le port ${config.PORT}....`))
+            Index.app.listen(config.PORT, ()=> {
+                console.log(`API démarrée sur le port ${config.PORT}....`)
+                Index.app.emit("ready")
+            })
         }).catch(error => console.log(error))
 
     }
 
-    static main() {
+    static async main() {
         Index.globalConfig()
         Index.routeConfig()
-        Index.serverConfig()
+        await Index.serverConfig()
     }
 
 }
