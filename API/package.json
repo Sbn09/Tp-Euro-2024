@@ -4,21 +4,13 @@
   "description": "A school project to track employee",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "ts-mocha 'src/test/*.ts' -p tsconfig.json --timeout 10000",
     "dev": "nodemon  -e js,ts,json,env --exec \"ts-node src/index.ts\"",
     "build": "npx tsc",
     "start": "node build/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/remicrobe/ACCESS.git"
-  },
   "author": "Tess & Rémi",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/remicrobe/ACCESS/issues"
-  },
-  "homepage": "https://github.com/remicrobe/ACCESS#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -34,15 +26,20 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.11",
     "@types/cors": "^2.8.13",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.20",
     "@types/jsonwebtoken": "^9.0.4",
     "@types/luxon": "^3.3.3",
+    "@types/mocha": "^10.0.6",
     "@types/node": "^20.8.7",
     "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^6.4.9",
     "@types/qrcode": "^1.5.4",
+    "chai": "^4.3.10",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.2.0",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
