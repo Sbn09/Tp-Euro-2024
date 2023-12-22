@@ -72,6 +72,7 @@ describe('Test du serveur', function() {
 const levels = [99, 16, 4, 2, 1];
 const expectedLengths = [16, 8, 4, 2, 1];
 
+// La route generate retourne les équipes gagnantes.
 describe('Test de la simulation de la compétition', function() {
   levels.forEach((level, index) => {
     it(`Doit simuler le niveau ${level} et retourner un tableau de longueur ${expectedLengths[index]}`, function(done) {
